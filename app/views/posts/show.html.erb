@@ -1,0 +1,17 @@
+<h1><%= @post.user.name %>'s post</h1>
+
+<%= link_to "Posts index", posts_path, class: "btn btn-primary" %>
+
+<h2><%= @post.title %></h2>
+<h3><%= @post.link %></h3>
+
+<% if @current_user == @post.user %>
+<ul class="buttons">
+  <li>
+    <%= link_to "Update post", edit_post_path(@post), class: "btn btn-warning" %>
+  </li>
+  <li>
+    <%= link_to "Delete post", post_path(@post), class: "btn btn-danger", method: :delete, data: { confirm: "Are you sure?" } %>
+  </li>
+</ul>
+<% end %>

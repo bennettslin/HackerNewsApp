@@ -1,0 +1,6 @@
+<%= bootstrap_form_for @user do |f| %>
+  <%= f.text_field :name, placeholder: "Your name", icon: "user" %>
+  <%= f.text_field :email, placeholder: "Your email", icon: "envelope" %>
+  <%= f.password_field :password, placeholder: "Your password", icon: "lock" %>
+  <%= f.primary %>
+<% end %>

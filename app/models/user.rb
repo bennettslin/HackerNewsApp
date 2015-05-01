@@ -1,6 +1,13 @@
 class User < ActiveRecord::Base
   has_secure_password
   has_many :posts
+  has_many :comments
+
+  # votes ABOUT this user
+  has_many :votes, as: :votable
+
+  # votes cast BY the user
+  has_many :ratings, class_name: "Vote"
 
   validates :name,
   presence: true,

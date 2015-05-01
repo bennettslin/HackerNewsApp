@@ -2,6 +2,9 @@ class UsersController < ApplicationController
 
   def index
     @users = User.all
+
+    # declare an empty vote
+    @vote = Vote.new
   end
 
   def new
@@ -14,6 +17,7 @@ class UsersController < ApplicationController
       flash[:success] = "User created. Please sign up!"
       redirect_to login_path
     else
+      flash[:danger] = "User was not created."
       render 'new'
     end
   end

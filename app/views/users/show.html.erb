@@ -4,10 +4,9 @@
 <h2><%= @user.name %></h2>
 <% if @user == @current_user %>
   <h3><%= @user.email %></h3>
-  <div><%= @user.password_digest %></div>
 <% end %>
 
-<table class="table table-hover">
+<table class="table table-hover table-striped">
   <thead>
     <tr>
       <th>Post title</th>
@@ -22,7 +21,7 @@
     <% @user.posts.each do |post| %>
       <tr>
         <td><%= link_to post.title, post %></td>
-        <td><%= post.link %></td>
+        <td><a href="<%= post.link %>"><%= post.link %></a></td>
         <% if @user == @current_user %>
           <td><%= link_to "Update post", edit_post_path(post), class: "btn btn-warning" %></td>
           <td><%= link_to "Delete post", post_path(post), class: "btn btn-danger", method: :delete, data: { confirm: "Are you sure?" } %></td>

@@ -1,9 +1,20 @@
 class PostsController < ApplicationController
 
   before_action :is_authenticated?, unless: [:index, :show]
+  respond_to :html, :js
 
   def index
+
     @posts = Post.all
+
+    # declare an empty vote
+    @vote = Vote.new
+
+    # for Ajax
+    # respond_to do |format|
+    #   format.html
+    #   format.js
+    # end
   end
 
   def new
@@ -16,11 +27,14 @@ class PostsController < ApplicationController
       flash[:success] = "Post successful."
       redirect_to @post
     else
+      flash[:danger] = "Post was not created."
       render 'new'
     end
   end
 
   def show
+    @vote = Vote.new
+    @comment = Comment.new
     @post = Post.find(params[:id])
   end
 

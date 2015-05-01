@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'site#index'
+  root 'posts#index'
 
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
@@ -11,8 +11,16 @@ Rails.application.routes.draw do
   delete 'logout' => 'sessions#destroy'
 
 
-  resources :users, only: [:index, :new, :create, :show]
-  resources :posts
+  resources :users, only: [:index, :new, :create, :show] do
+    resources :votes, only: [:create]
+  end
+
+  resources :posts do
+    resources :votes, only: [:create]
+    resources :comments, only: [:create] do
+        resources :votes, only: [:create]
+    end
+  end
 
   get 'signup' => 'users#new'
   post 'signup' => 'users#create'

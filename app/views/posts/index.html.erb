@@ -1,17 +1,24 @@
-<h1>Posts index</h1>
+<h1>Posts index
+  <%= image_tag("pizza.gif", height: '128', width: '128', :alt => "pizza") %>
+</h1>
+
+<div id="task-form" style="display:none;"></div>
 
 <% if @current_user %>
   <%= link_to "Add new post", new_post_path, class: "btn btn-primary" %>
 <% end %>
 
-<table class="table table-hover">
+<table class="table table-hover table-striped">
   <thead>
     <tr>
       <th>Post writer</th>
       <th>Post title</th>
       <th>Post link</th>
-      <th></th>
-      <th></th>
+      <th>Votes total</th>
+      <th>Votes sum</th>
+      <th>Update button</th>
+      <th>Delete button</th>
+      <th>Vote button</th>
     </tr>
   </thead>
   <tbody>
@@ -19,10 +26,27 @@
       <tr>
         <td><%= link_to post.user.name, post.user %></td>
         <td><%= link_to post.title, post %></td>
-        <td><%= post.link %></td>
+        <td><a href="<%= post.link %>"><%= post.link %></a></td>
+        <td><%= post.votes.count %></td>
+        <td><%= post.votes.inject(0) { |sum, vote| sum + vote.value } %></td>
         <% if @current_user == post.user %>
-          <td><%= link_to "Update post", edit_post_path(post), class: "btn btn-warning" %></td>
-          <td><%= link_to "Delete post", post_path(post), class: "btn btn-danger", method: :delete, data: { confirm: "Are you sure?" } %></td>
+          <td><%= link_to "Update", edit_post_path(post), class: "btn btn-warning" %></td>
+          <td><%= link_to "Delete", post_path(post), class: "btn btn-danger", method: :delete, data: { confirm: "Are you sure?" } %></td>
+        <% else %>
+          <td></td>
+          <td></td>
+        <% end %>
+        <% if @current_user %>
+          <td><%= bootstrap_form_for [post, @vote] do |f| %>
+                <%= f.hidden_field :value, value: "1" %>
+                <%= f.button "Vote up!", class: "btn btn-primary btn-xs" %>
+              <% end %>
+              <%= bootstrap_form_for [post, @vote] do |f| %>
+                <%= f.hidden_field :value, value: "-1" %>
+                <%= f.button "Vote down!", class: "btn btn-primary btn-xs" %>
+              <% end %></td>
+        <% else %>
+          <td></td>
         <% end %>
       </tr>
     <% end %>

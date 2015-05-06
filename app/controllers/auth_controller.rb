@@ -3,8 +3,9 @@ class AuthController < ApplicationController
   def callback
     provider_user = request.env['omniauth.auth']
 
-    # FIXME: this doesn't work if same user has both Google and Facebook accounts
-    # turned off validation of unique email to get around this for now,
+    # FIXME: for situation where same user logs in with different accounts
+    # at different times (for example Facebook then Google)
+    # I turned off validation of unique email to get around this for now,
     # but obviously this is not an ideal solution
 
     if params[:provider] == "facebook"
@@ -23,6 +24,28 @@ class AuthController < ApplicationController
       session[:user_id] = user.id
 
     elsif params[:provider] == "google_oauth2"
+      user = User.find_or_create_by(provider_id:provider_user['uid'], provider: params[:provider]) do |u|
+        u.provider_hash = provider_user['credentials']['token']
+        u.name = provider_user['info']['name']
+        u.email = provider_user['info']['email']
+        u.password = "123"
+      end
+
+      # create user session
+      session[:user_id] = user.id
+
+    elsif params[:provider] == "twitter"
+      user = User.find_or_create_by(provider_id:provider_user['uid'], provider: params[:provider]) do |u|
+        u.provider_hash = provider_user['credentials']['token']
+        u.name = provider_user['info']['name']
+        u.email = "#{provider_user['info']['nickname']}@example.com"
+        u.password = "123"
+      end
+
+      # create user session
+      session[:user_id] = user.id
+
+    elsif params[:provider] == "linkedin"
       user = User.find_or_create_by(provider_id:provider_user['uid'], provider: params[:provider]) do |u|
         u.provider_hash = provider_user['credentials']['token']
         u.name = provider_user['info']['name']

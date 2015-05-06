@@ -3,13 +3,16 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'posts#index'
+  root 'site#index'
 
   get 'login' => 'sessions#new'
   post 'login' => 'sessions#create'
   get 'logout' => 'sessions#destroy'
   delete 'logout' => 'sessions#destroy'
 
+  get 'auth/logout' => 'auth#logout'
+  get 'auth/failure' => 'auth#failure'
+  get 'auth/:provider/callback' => 'auth#callback'
 
   resources :users, only: [:index, :new, :create, :show] do
     resources :votes, only: [:create]
@@ -21,6 +24,8 @@ Rails.application.routes.draw do
         resources :votes, only: [:create]
     end
   end
+
+  resources :passwords, except: [:index, :show]
 
   get 'signup' => 'users#new'
   post 'signup' => 'users#create'
